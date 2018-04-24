@@ -1,0 +1,25 @@
+{
+  "name": "coffee-telegram-bot",
+  "version": "1.0.2",
+  "description": "A Telegram Bot framework, written in CoffeeScript.",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlynxZhou/coffee-telegram-bot.git"
+  },
+  "keywords": [
+    "Telegram",
+    "Bot",
+    "CoffeeScript",
+    "Node.js"
+  ],
+  "author": "AlynxZhou <alynx.zhou@gmail.com> (https://alynx.xyz/)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/AlynxZhou/coffee-telegram-bot/issues"
+  },
+  "homepage": "https://github.com/AlynxZhou/coffee-telegram-bot#readme"
+}
