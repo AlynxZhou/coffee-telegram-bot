@@ -10,9 +10,7 @@ class BotManager
     @destroyTimeout = destroyTimeout
     @isPolling = false
     @pollingID = null
-    @pollingParam = {
-      "offset": 0
-    }
+    @pollingParam = {"offset": 0}
     @lastUpdateTime = null
     @pollingInterval = pollingInterval
     @bots = {}
@@ -29,8 +27,8 @@ class BotManager
     )
     if process.platform is "win32"
       require("readline").createInterface({
-        input: process.stdin,
-        output: process.stdout
+        "input": process.stdin,
+        "output": process.stdout
       }).on("SIGINT", () ->
         process.emit("SIGINT")
       )
@@ -45,6 +43,7 @@ class BotManager
     if not @isPolling
       @isPolling = true
       @pollingUpdates()
+    return @isPolling
 
   pollingUpdates: () =>
     updateID = 0
@@ -61,13 +60,18 @@ class BotManager
         if not @bots[identifier]?
           @bots[identifier] = new @BotTemplate(@botApi, identifier, \
           @botName, @botID)
+          if @bots[identifier].onCreate instanceof Function
+            await @bots[identifier].onCreate()
         @bots[identifier].processUpdate(update)
         @bots[identifier].lastActiveTime = Date.now()
       # botUtils.debug(@bots)
     ).then(() =>
-      for identifier of @bots then do (identifier) =>
-        if Date.now() - @bots[identifier].lastActiveTime > @destroyTimeout
-          delete @bots[identifier]
+      if @destroyTimeout?
+        for identifier of @bots then do (identifier) =>
+          if Date.now() - @bots[identifier].lastActiveTime > @destroyTimeout
+            if @bots[identifier].onDelete instanceof Function
+              await @bots[identifier].onDelete()
+            delete @bots[identifier]
     ).catch(botUtils.error).then(() =>
       # Always update offset after all update objects processed, or catched
       # an exception.
@@ -81,5 +85,7 @@ class BotManager
       clearTimeout(@pollingID)
       @pollingID = null
       for identifier of @bots then do (identifier) =>
+        if @bots[identifier].onDelete instanceof Function
+          await @bots[identifier].onDelete()
         delete @bots[identifier]
     return @isPolling

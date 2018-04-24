@@ -1,8 +1,8 @@
-{BotManager, BotTemplate, BotApi, botUtils} = require("./index")
 path = require("path")
+{BotManager, BotTemplate, BotApi, botUtils} = require("./index")
 
-tulingApiKey = process.argv[3]
-adminUser = process.argv[4]
+adminUser = process.argv[3]
+tulingApiKey = process.argv[4]
 
 saveData = () ->
   return botUtils.writeFileAsync("data.json", \
@@ -32,12 +32,12 @@ class TeleBot extends BotTemplate
 
   @loadJSON: (json) =>
     for k, v of json["morningList"]
-      @morningList[k] = { "name": v["name"], \
-      "time": new Date(v["time"]) }
+      @morningList[k] = {"name": v["name"], \
+      "time": new Date(v["time"])}
     @morningDate = new Date(json["morningDate"])
     for k, v of json["eveningList"]
-      @eveningList[k] = { "name": v["name"], \
-      "time": new Date(v["time"]) }
+      @eveningList[k] = {"name": v["name"], \
+      "time": new Date(v["time"])}
     @eveningDate = new Date(json["eveningDate"])
     @echoList = json["echoList"]
     @echoText = json["echoText"]
@@ -46,11 +46,11 @@ class TeleBot extends BotTemplate
   @makeJSON: () =>
     morningList = {}
     for k, v of @morningList
-      morningList[k] = { "name": v["name"], "time": v["time"].getTime() }
+      morningList[k] = {"name": v["name"], "time": v["time"].getTime()}
     morningDate = @morningDate.getTime()
     eveningList = {}
     for k, v of @eveningList
-      eveningList[k] = { "name": v["name"], "time": v["time"].getTime() }
+      eveningList[k] = {"name": v["name"], "time": v["time"].getTime()}
     eveningDate = @eveningDate.getTime()
     return {
       "morningList": morningList,
@@ -74,7 +74,7 @@ class TeleBot extends BotTemplate
     "typing").then(() =>
       return @botApi.sendMessage(update["message"]["chat"]["id"], \
       "欢迎，使用 /help 获取帮助列表。", \
-      { "reply_to_message_id": update["message"]["message_id"] })
+      {"reply_to_message_id": update["message"]["message_id"]})
     ).catch(botUtils.error)
 
   onHelp: (update) =>
@@ -121,16 +121,16 @@ class TeleBot extends BotTemplate
     )
     keyboard = []
     for chatInfo in @constructor.echoList
-      keyboard.push([ "echo##{chatInfo}" ])
-    keyboard.push([ "text": "echo#All" ])
-    keyboard.push([ "text": "echo#Cancel" ])
+      keyboard.push(["echo##{chatInfo}"])
+    keyboard.push(["echo#All"])
+    keyboard.push(["text": "echo#Cancel"])
     @botApi.sendChatAction(update["message"]["chat"]["id"], \
     "typing").then(() =>
       return @botApi.sendMessage(update["message"]["chat"]["id"], \
       "选择您想传达到哪个聊天", \
       {
         "reply_to_message_id": update["message"]["message_id"],
-        "reply_markup": { "keyboard": keyboard }
+        "reply_markup": {"keyboard": keyboard}
       })
     )
 
@@ -160,7 +160,7 @@ class TeleBot extends BotTemplate
       return @botApi.sendMessage(update["message"]["chat"]["id"], \
       "OK.", {
         "reply_to_message_id": update["message"]["message_id"],
-        "reply_markup": { "remove_keyboard": true }
+        "reply_markup": {"remove_keyboard": true}
       })
     )
 
@@ -169,7 +169,7 @@ class TeleBot extends BotTemplate
     "typing").then(() =>
       return @botApi.sendMessage(update["message"]["chat"]["id"], \
       "Dalao，膜！", \
-      { "reply_to_message_id": update["message"]["message_id"] })
+      {"reply_to_message_id": update["message"]["message_id"]})
     )
 
   onMorningList: (update) =>
@@ -404,7 +404,7 @@ class TeleBot extends BotTemplate
     ).catch(botUtils.error)
 
   onText: (regex, callback) =>
-    @textRouter.push({ "regex": regex, "callback": callback })
+    @textRouter.push({"regex": regex, "callback": callback})
 
   forwardUpdate: (update) =>
     for chatID in @constructor.forwardList then do (chatID) =>
@@ -414,7 +414,7 @@ class TeleBot extends BotTemplate
           return @botApi.forwardMessage(chatID, \
           update["message"]["chat"]["id"], \
           update["message"]["message_id"], \
-          { "disable_notification": true })
+          {"disable_notification": true})
         )
 
   addAllTextRouter: () =>

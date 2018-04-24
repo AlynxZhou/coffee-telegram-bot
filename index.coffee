@@ -5,8 +5,8 @@ botUtils = require("./bot-utils")
 
 module.exports =
 botIndex = {
-  BotManager: BotManager,
-  BotTemplate: BotTemplate,
-  BotApi: BotApi,
-  botUtils: botUtils
+  "BotManager": BotManager,
+  "BotTemplate": BotTemplate,
+  "BotApi": BotApi,
+  "botUtils": botUtils
 }

@@ -1,9 +1,9 @@
 http = require("http")
 path = require("path")
 promisify = require("util").promisify
+accessAsync = promisify(require("fs").access)
 readFileAsync = promisify(require("fs").readFile)
 writeFileAsync = promisify(require("fs").writeFile)
-accessAsync = promisify(require("fs").access)
 
 perFromID = (update) ->
   if update["message"]["from"]?["id"]?
@@ -82,13 +82,13 @@ error = (error) ->
 
 module.exports =
 botUtils = {
-  perFromID: perFromID,
-  readFileAsync: readFileAsync,
-  writeFileAsync: writeFileAsync,
-  readFileAsObj: readFileAsObj,
-  accessAsync: accessAsync,
-  getTuling: getTuling,
-  log: log,
-  debug: debug,
-  error: error
+  "perFromID": perFromID,
+  "readFileAsync": readFileAsync,
+  "writeFileAsync": writeFileAsync,
+  "readFileAsObj": readFileAsObj,
+  "accessAsync": accessAsync,
+  "getTuling": getTuling,
+  "log": log,
+  "debug": debug,
+  "error": error
 }

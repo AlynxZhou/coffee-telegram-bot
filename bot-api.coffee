@@ -1,7 +1,7 @@
+path = require("path")
 https = require("https")
 # querystring = require("querystring")
 botUtils = require("./bot-utils")
-path = require("path")
 
 ###
 Official Document: https://core.telegram.org/bots/api/
@@ -83,7 +83,7 @@ class BotApi
     return @request("getMe")
 
   sendChatAction: (chatID, action) =>
-    return @request("sendChatAction", { "chat_id": chatID, "action": action })
+    return @request("sendChatAction", {"chat_id": chatID, "action": action})
 
   sendMessage: (chatID, text, postParam = {}) =>
     postParam["chat_id"] = chatID
@@ -174,7 +174,7 @@ class BotApi
     return @request("getUserProfilePhotos", postParam)
 
   getFile: (fileID) =>
-    return @request("getFile", { "file_id": fileID })
+    return @request("getFile", {"file_id": fileID})
 
   kickChatMember: (chatID, userID, postParam = {}) =>
     postParam["chat_id"] = chatID
@@ -182,7 +182,7 @@ class BotApi
     return @request("kickChatMember", postParam)
 
   unbanChatMember: (chatID, userID) =>
-    return @request("unbanChatMember", { "chat_id": chatID, "user_id": userID })
+    return @request("unbanChatMember", {"chat_id": chatID, "user_id": userID})
 
   restrictChatMember: (chatID, userID, postParam = {}) =>
     postParam["chat_id"] = chatID
@@ -195,16 +195,16 @@ class BotApi
     return @request("promoteChatMember", postParam)
 
   exportChatInviteLink: (chatID) =>
-    return @request("exportChatInviteLink", { "chat_id": chatID })
+    return @request("exportChatInviteLink", {"chat_id": chatID})
 
   setChatPhoto: (chatID, photo) =>
-    @request("setChatPhoto", { "chat_id": chatID}, photo)
+    @request("setChatPhoto", {"chat_id": chatID}, photo)
 
   deleteChatPhoto: (chatID) =>
-    @request("deleteChatPhoto", { "chat_id": chatID })
+    @request("deleteChatPhoto", {"chat_id": chatID})
 
   setChatTitle: (chatID, title) =>
-    @request("setChatTitle", { "chat_id": chatID, "title": title })
+    @request("setChatTitle", {"chat_id": chatID, "title": title})
 
   setChatDescription: (chatID, postParam = {}) =>
     postParam["chat_id"] = chatID
@@ -216,29 +216,29 @@ class BotApi
     return @request("pinChatMessage", postParam)
 
   unpinChatMessage: (chatID) =>
-    return @request("unpinChatMessage", { "chat_id": chatID })
+    return @request("unpinChatMessage", {"chat_id": chatID})
 
   leaveChat: (chatID) =>
-    return @request("leaveChat", { "chat_id": chatID })
+    return @request("leaveChat", {"chat_id": chatID})
 
   getChat: (chatID) =>
-    return @request("getChat", { "chat_id": chatID })
+    return @request("getChat", {"chat_id": chatID})
 
   getChatAdministrators: (chatID) =>
-    return @request("getChatAdministrators", { "chat_id": chatID })
+    return @request("getChatAdministrators", {"chat_id": chatID})
 
   getChatMembersCount: (chatID) =>
-    return @request("getChatMembersCount", { "chat_id": chatID })
+    return @request("getChatMembersCount", {"chat_id": chatID})
 
   getChatMember: (chatID, userID) =>
-    return @request("getChatMember", { "chat_id": chatID, "user_id": userID })
+    return @request("getChatMember", {"chat_id": chatID, "user_id": userID})
 
   setChatStickerSet: (chatID, stickerSetName) =>
     return @request("setChatStickerSet", \
-    { "chat_id": chatID, "sticker_set_name": stickerSetName })
+    {"chat_id": chatID, "sticker_set_name": stickerSetName})
 
   deleteChatStickerSet: (chatID) =>
-    return @request("deleteChatStickerSet", { "chat_id": chatID })
+    return @request("deleteChatStickerSet", {"chat_id": chatID})
 
   editMessageText: (text, postParam = {}) =>
     postParam["text"] = text
@@ -252,7 +252,7 @@ class BotApi
 
   deleteMessage: (chatID, messageID) =>
     return @request("deleteMessage", \
-    { "chat_id": chatID, "message_id": messageID })
+    {"chat_id": chatID, "message_id": messageID})
 
   sendSticker: (chatID, sticker, postParam = {}) =>
     postParam["chat_id"] = chatID
@@ -267,7 +267,7 @@ class BotApi
     return @request("sendSticker", postParam, sticker)
 
   getStickerSet: (name) =>
-    return @request("getStickerSet", { "name": name })
+    return @request("getStickerSet", {"name": name})
 
   uploadStickerFile: (userID, pngSticker) =>
     if pngSticker instanceof Object and \
@@ -276,7 +276,7 @@ class BotApi
     else
       throw new Error("Invalid sticker.")
     return @request("uploadStickerFile", \
-    { "user_id": userID }, pngSticker)
+    {"user_id": userID}, pngSticker)
 
   createNewStickerSet: (userID, name, title, \
   pngSticker, emojis, postParam = {}) =>
@@ -304,10 +304,10 @@ class BotApi
 
   setStickerPositionInSet: (sticker, position) =>
     return @request("setStickerPositionInSet", \
-    { "sticker": sticker, "position": position })
+    {"sticker": sticker, "position": position})
 
   deleteStickerFromSet: (sticker) =>
-    return @request("deleteStickerFromSet", { "sticker": sticker })
+    return @request("deleteStickerFromSet", {"sticker": sticker})
 
   ###
   param: Object: https://core.telegram.org/bots/api#getupdates
