@@ -1,5 +1,4 @@
-module.exports =
-class BotTemplate
+class BotServant
   constructor: (botApi, identifier, botName, botID) ->
     @botApi = botApi
     @identifier = identifier
@@ -7,3 +6,5 @@ class BotTemplate
     @botID = botID
 
   processUpdate: (update) ->
+
+module.exports = BotServant

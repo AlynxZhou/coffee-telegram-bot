@@ -1,5 +1,5 @@
 path = require("path")
-{BotManager, BotTemplate, BotApi, botUtils} = require("./index")
+{BotMaster, BotServant, BotApi, botUtils} = require("./index")
 
 adminUser = process.argv[3]
 tulingApiKey = process.argv[4]
@@ -21,7 +21,7 @@ loadData = () ->
     TeleBot.forwardList = []
   )
 
-class TeleBot extends BotTemplate
+class TeleBot extends BotServant
   @morningList: {}
   @morningDate: new Date()
   @eveningList: {}
@@ -474,7 +474,6 @@ class TeleBot extends BotTemplate
       update["message"]["from"]["id"] isnt @botID
         @forwardUpdate(update)
 
-
-botManager = new BotManager(new BotApi(process.argv[2]), \
+botMaster = new BotMaster(new BotApi(process.argv[2]), \
 TeleBot, botUtils.perFromID)
-botManager.loop(loadData, saveData)
+botMaster.loop(loadData, saveData)

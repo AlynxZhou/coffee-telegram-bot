@@ -1,5 +1,5 @@
 path = require("path")
-https = require("https")
+http = require("http")
 # querystring = require("querystring")
 botUtils = require("./bot-utils")
 
@@ -7,7 +7,6 @@ botUtils = require("./bot-utils")
 Official Document: https://core.telegram.org/bots/api/
 TODO: Inline mode (I need to learn what is inline mode first).
 ###
-module.exports =
 class BotApi
   constructor: (token) ->
     @token = token
@@ -16,7 +15,7 @@ class BotApi
     chunks = []
     size = 0
     httpOptions = {
-      "protocol": "https:",
+      "protocol": "http:",
       "host": "api.telegram.org",
       "port": 443,
       "method": "POST",
@@ -49,7 +48,7 @@ class BotApi
         Buffer.byteLength(fileData["fileBuf"]) + Buffer.byteLength(fileEnd)
       }
     return new Promise((resolve, reject) ->
-      req = https.request(httpOptions, (res) ->
+      req = http.request(httpOptions, (res) ->
         # If there is wide character between chunks, it cannot be
         # encoded easily due to spliting. Instead we need to concat
         # them then encoding.
@@ -318,3 +317,5 @@ class BotApi
   ###
   getUpdates: (postParam) =>
     return @request("getUpdates", postParam)
+
+module.exports = BotApi

@@ -6,7 +6,7 @@ readFileAsync = promisify(require("fs").readFile)
 writeFileAsync = promisify(require("fs").writeFile)
 
 perFromID = (update) ->
-  if update["message"]["from"]?["id"]?
+  if update["message"]?["from"]?["id"]?
     identifier = "#{update["message"]["from"]["id"]}"
   else
     identifier = "0"

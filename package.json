@@ -2,8 +2,10 @@
   "name": "coffee-telegram-bot",
   "version": "1.0.3",
   "description": "A Telegram Bot framework, written in CoffeeScript.",
-  "main": "index.coffee",
+  "main": "libs/index.js",
   "scripts": {
+    "build": "cake build",
+    "prepare": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,7 +24,7 @@
     "url": "https://github.com/AlynxZhou/coffee-telegram-bot/issues"
   },
   "homepage": "https://github.com/AlynxZhou/coffee-telegram-bot#readme",
-  "dependencies": {
+  "devDependencies": {
     "coffeescript": "^2.2.4"
   }
 }

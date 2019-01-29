@@ -8,7 +8,7 @@ Demo: [@AlynxRunaBot](https://t.me/AlynxRunaBot)
 
 # Feature
 
-- Only one dependency (CoffeeScript), all native Node.js method.
+- Only one dev dependency (CoffeeScript), all native Node.js method.
 
 - Promise based async framework.
 
@@ -31,15 +31,15 @@ Demo: [@AlynxRunaBot](https://t.me/AlynxRunaBot)
 		```CoffeeScript
 		# Import modules with Destructuring Assignment.
 		# botUtils is an object while others are class.
-		{BotManager, BotTemplate, BotApi, botUtils} = require("coffee-telegram-bot")
+		{BotMaster, BotServant, BotApi, botUtils} = require("coffee-telegram-bot")
 
 		# Get token from cli. Command like `$ coffee YOURBOT.coffee TOKEN`.
 		# process.argv likes ["coffee", "YOURBOT.coffee", "TOKEN"].
 		token = process.argv[2]
 
-		# Your bot should extend BotTemplate, and implements processUpdate method.
-		class MyBot extends BotTemplate
-		  # BotManager will give each objects a botApi, which is used to send API request (yes different bots share one botApi), an identifier for each object, and bot's Name for logging, also your bot's ID.
+		# Your bot should extend BotServant, and implements processUpdate method.
+		class MyBot extends BotServant
+		  # BotMaster will give each objects a botApi, which is used to send API request (yes different bots share one botApi), an identifier for each object, and bot's Name for logging, also your bot's ID.
 		  constructor: (botApi, identifier, botName, botID) ->
 		    # You extend, so you need to call `super`.
 		    # This super call will make arguments into props of `this`.
@@ -47,7 +47,7 @@ Demo: [@AlynxRunaBot](https://t.me/AlynxRunaBot)
 		    # A message counter.
 		    @counter = 0
 
-		  # BotManager will call `processUpdate`.
+		  # BotMaster will call `processUpdate`.
 		  # For the update object read `https://core.telegram.org/bots/api#Update`.
 		  processUpdate: (update) =>
 		    if update["message"]
@@ -59,13 +59,13 @@ Demo: [@AlynxRunaBot](https://t.me/AlynxRunaBot)
 		          return @botApi.sendMessage(update["message"]["chat"]["id"], "Received.",  {"reply_to_message_id": update["message"]["message_id"]})
 			).catch(botUtils.error)
 
-		# Create a `BotManager` to start the program, it takes following arguments:
+		# Create a `BotMaster` to start the program, it takes following arguments:
 		# A `BotApi` object shares to each bot.
-		# A `BotTemplate` (we call it `MyBot` in this example).
+		# A `BotServant` (we call it `MyBot` in this example).
 		# An `identify` function to give each bot an identifier from update object (we only create one bot object so use a function returns "0").
 		# `null` means no bot destroy timeout. We keep this bot's lifecycle.
-		# Use `BotManager::loop` to run it, `loop` takes two functions as arguments, the former will be run before loop starts, the later will be run after loop stops.
-		new BotManager(new BotApi(token), MyBot, () -> return "0", null).loop(null, null)
+		# Use `BotMaster::loop` to run it, `loop` takes two functions as arguments, the former will be run before loop starts, the later will be run after loop stops.
+		new BotMaster(new BotApi(token), MyBot, () -> return "0", null).loop(null, null)
 		```
 
 	- A bot that use different object to serve different users:
@@ -73,15 +73,15 @@ Demo: [@AlynxRunaBot](https://t.me/AlynxRunaBot)
 		```CoffeeScript
 		# Import modules with Destructuring Assignment.
 		# botUtils is an object while others are class.
-		{BotManager, BotTemplate, BotApi, botUtils} = require("coffee-telegram-bot")
+		{BotMaster, BotServant, BotApi, botUtils} = require("coffee-telegram-bot")
 
 		# Get token from cli. Command like `$ coffee YOURBOT.coffee TOKEN`.
 		# process.argv likes ["coffee", "YOURBOT.coffee", "TOKEN"].
 		token = process.argv[2]
 
-		# Your bot should extend BotTemplate, and implements processUpdate method.
-		class MyBot extends BotTemplate
-		  # BotManager will give each objects a botApi, which is used to send API request (yes different bots share one botApi), an identifier for each object, and bot's Name for logging, also your bot's ID.
+		# Your bot should extend BotServant, and implements processUpdate method.
+		class MyBot extends BotServant
+		  # BotMaster will give each objects a botApi, which is used to send API request (yes different bots share one botApi), an identifier for each object, and bot's Name for logging, also your bot's ID.
 		  constructor: (botApi, identifier, botName, botID) ->
 		    # You extend, so you need to call `super`.
 		    # This super call will make arguments into props of `this`.
@@ -89,7 +89,7 @@ Demo: [@AlynxRunaBot](https://t.me/AlynxRunaBot)
 		    # A message counter.
 		    @counter = 0
 
-		  # BotManager will call `processUpdate`.
+		  # BotMaster will call `processUpdate`.
 		  # For the update object read `https://core.telegram.org/bots/api#Update`.
 		  processUpdate: (update) =>
 		    if update["message"]
@@ -101,13 +101,13 @@ Demo: [@AlynxRunaBot](https://t.me/AlynxRunaBot)
 		          return @botApi.sendMessage(update["message"]["chat"]["id"], "Received.",  {"reply_to_message_id": update["message"]["message_id"]})
 			).catch(botUtils.error)
 
-		# Create a `BotManager` to start the program, it takes following arguments:
+		# Create a `BotMaster` to start the program, it takes following arguments:
 		# A `BotApi` object shares to each bot.
-		# A `BotTemplate` (we call it `MyBot` in this example).
+		# A `BotServant` (we call it `MyBot` in this example).
 		# An `identify` function to give each bot an identifier from update object (`botUtils.perFromID` returns the `userID` in update object, we use this).
 		# Leave destroy timeout default.
-		# Use `BotManager::loop` to run it, `loop` takes two functions as arguments, the former will be run before loop starts, the later will be run after loop stops.
-		new BotManager(new BotApi(token), MyBot, botUtils.perFromID).loop(null, null)
+		# Use `BotMaster::loop` to run it, `loop` takes two functions as arguments, the former will be run before loop starts, the later will be run after loop stops.
+		new BotMaster(new BotApi(token), MyBot, botUtils.perFromID).loop(null, null)
 		```
 
 # License
