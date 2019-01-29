@@ -1,4 +1,4 @@
-EventEmitter = require("event")
+EventEmitter = require("events")
 BotPoller = require("./bot-poller")
 BotApi = require("./bot-api")
 
