@@ -1,5 +1,5 @@
 path = require("path")
-http = require("http")
+http = require("https")
 # querystring = require("querystring")
 botUtils = require("./bot-utils")
 
@@ -15,7 +15,7 @@ class BotApi
     chunks = []
     size = 0
     httpOptions = {
-      "protocol": "http:",
+      "protocol": "https:",
       "host": "api.telegram.org",
       "port": 443,
       "method": "POST",
