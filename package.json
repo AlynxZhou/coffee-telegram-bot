@@ -18,7 +18,7 @@
     "CoffeeScript",
     "Node.js"
   ],
-  "author": "AlynxZhou <alynx.zhou@gmail.com> (https://alynx.xyz/)",
+  "author": "Alynx Zhou <alynx.zhou@gmail.com> (https://alynx.moe/)",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/AlynxZhou/coffee-telegram-bot/issues"
