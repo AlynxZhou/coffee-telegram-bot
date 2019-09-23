@@ -6,7 +6,7 @@
 
   // A poller for polling updates, and send updates to a handle function.
   BotPoller = class BotPoller {
-    constructor(botApi, onUpdates, pollingInterval = 500) {
+    constructor(botApi, onUpdates, skipUpdates = true, pollingInterval = 500) {
       this.startPollUpdates = this.startPollUpdates.bind(this);
       this.pollingUpdates = this.pollingUpdates.bind(this);
       this.stopPollUpdates = this.stopPollUpdates.bind(this);
@@ -14,7 +14,7 @@
       this.isPolling = false;
       this.pollingID = null;
       this.pollingParam = {
-        "offset": 0
+        "offset": (skipUpdates ? -1 : 0)
       };
       this.lastUpdateTime = null;
       this.pollingInterval = pollingInterval;

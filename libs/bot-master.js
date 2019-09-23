@@ -7,11 +7,11 @@
   BotPoller = require("./bot-poller");
 
   BotMaster = class BotMaster {
-    constructor(botApi, BotServant, identify, destroyTimeout = 5 * 60 * 1000, pollingInterval = 500) {
+    constructor(botApi, BotServant, identify, skipUpdates = true, destroyTimeout = 5 * 60 * 1000, pollingInterval = 500) {
       this.loop = this.loop.bind(this);
       this.onUpdates = this.onUpdates.bind(this);
       this.botApi = botApi;
-      this.poller = new BotPoller(botApi, this.onUpdates, pollingInterval);
+      this.poller = new BotPoller(botApi, this.onUpdates, skipUpdates, pollingInterval);
       this.BotServant = BotServant;
       this.identify = identify;
       this.destroyTimeout = destroyTimeout;

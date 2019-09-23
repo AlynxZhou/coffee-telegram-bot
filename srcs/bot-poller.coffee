@@ -2,11 +2,11 @@ botUtils = require("./bot-utils")
 
 # A poller for polling updates, and send updates to a handle function.
 class BotPoller
-  constructor: (botApi, onUpdates, pollingInterval = 500) ->
+  constructor: (botApi, onUpdates, skipUpdates = true, pollingInterval = 500) ->
     @botApi = botApi
     @isPolling = false
     @pollingID = null
-    @pollingParam = {"offset": 0}
+    @pollingParam = {"offset": (if skipUpdates then -1 else 0)}
     @lastUpdateTime = null
     @pollingInterval = pollingInterval
     @onUpdates = onUpdates

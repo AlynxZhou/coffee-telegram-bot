@@ -2,10 +2,10 @@ botUtils = require("./bot-utils")
 BotPoller = require("./bot-poller")
 
 class BotMaster
-  constructor: (botApi, BotServant, identify, \
+  constructor: (botApi, BotServant, identify, skipUpdates = true, \
   destroyTimeout = 5 * 60 * 1000, pollingInterval = 500) ->
     @botApi = botApi
-    @poller = new BotPoller(botApi, @onUpdates, pollingInterval)
+    @poller = new BotPoller(botApi, @onUpdates, skipUpdates, pollingInterval)
     @BotServant = BotServant
     @identify = identify
     @destroyTimeout = destroyTimeout
