@@ -6,54 +6,72 @@
 
   // A poller for polling updates, and send updates to a handle function.
   BotPoller = class BotPoller {
-    constructor(botApi, onUpdates, skipUpdates = true, pollingInterval = 500) {
+    constructor(botApi, onUpdates, opts = {}) {
+      this.getUpdates = this.getUpdates.bind(this);
+      this.skipUpdates = this.skipUpdates.bind(this);
       this.startPollUpdates = this.startPollUpdates.bind(this);
-      this.pollingUpdates = this.pollingUpdates.bind(this);
+      this.pollUpdates = this.pollUpdates.bind(this);
       this.stopPollUpdates = this.stopPollUpdates.bind(this);
       this.botApi = botApi;
+      this.onUpdates = onUpdates;
+      this.pollingInterval = opts["pollingInterval"] || 700;
+      this.skippingUpdates = opts["skippingUpdates"];
       this.isPolling = false;
       this.pollingID = null;
       this.pollingParam = {
-        "offset": (skipUpdates ? -1 : 0)
+        "offset": 0,
+        "timeout": 1
       };
-      this.lastUpdateTime = null;
-      this.pollingInterval = pollingInterval;
-      this.onUpdates = onUpdates;
     }
 
-    startPollUpdates() {
+    async getUpdates() {
+      var error, updates;
+      try {
+        updates = (await this.botApi.getUpdates(this.pollingParam));
+      } catch (error1) {
+        error = error1;
+        botUtils.error(error);
+        updates = [];
+      }
+      return updates;
+    }
+
+    async skipUpdates() {
+      var updates;
+      this.pollingParam["offset"] = -1;
+      updates = (await this.getUpdates());
+      // Should be only one or zero update here.
+      if (updates.length > 0) {
+        return this.pollingParam["offset"] = updates[0]["update_id"] + 1;
+      }
+    }
+
+    async startPollUpdates() {
       if (!this.isPolling) {
+        if (this.skippingUpdates !== false) {
+          await this.skipUpdates();
+        }
         this.isPolling = true;
-        this.pollingUpdates();
+        this.pollUpdates();
       }
       return this.isPolling;
     }
 
-    pollingUpdates() {
-      var updateID;
+    async pollUpdates() {
+      var i, len, update, updateID, updates;
+      updates = (await this.getUpdates());
+      this.onUpdates(updates);
       updateID = 0;
-      return this.botApi.getUpdates(this.pollingParam).then((updates) => {
-        var i, len, update;
-        this.lastUpdate = Date.now();
-// botUtils.debug(JSON.stringify(updates, null, "  "))
-        for (i = 0, len = updates.length; i < len; i++) {
-          update = updates[i];
-          (function(update) {
-            // Only update offset when update is newer, prevent when older update
-            // object was processed too slow in this async closure.
-            // Update the id first or it will loop when process failed.
-            if (updateID < update["update_id"]) {
-              return updateID = update["update_id"];
-            }
-          })(update);
+      for (i = 0, len = updates.length; i < len; i++) {
+        update = updates[i];
+        if (updateID < update["update_id"]) {
+          updateID = update["update_id"];
         }
-        return this.onUpdates(updates);
-      }).catch(botUtils.error).then(() => {
-        // Always update offset after all update objects processed, or catched
-        // an exception.
+      }
+      if (updateID !== 0) {
         this.pollingParam["offset"] = updateID + 1;
-        return this.pollingID = setTimeout(this.pollingUpdates, this.pollingInterval);
-      });
+      }
+      return this.pollingID = setTimeout(this.pollUpdates, this.pollingInterval);
     }
 
     stopPollUpdates() {

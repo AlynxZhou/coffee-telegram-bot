@@ -7,28 +7,23 @@
   BotPoller = require("./bot-poller");
 
   BotMaster = class BotMaster {
-    constructor(botApi, BotServant, identify, skipUpdates = true, destroyTimeout = 5 * 60 * 1000, pollingInterval = 500) {
+    constructor(botApi, BotServant, identify, opts = {}) {
       this.loop = this.loop.bind(this);
       this.onUpdates = this.onUpdates.bind(this);
       this.botApi = botApi;
-      this.poller = new BotPoller(botApi, this.onUpdates, skipUpdates, pollingInterval);
       this.BotServant = BotServant;
       this.identify = identify;
-      this.destroyTimeout = destroyTimeout;
+      this.destroyTimeout = opts["destroyTimeout"] || 5 * 60 * 1000;
+      this.poller = new BotPoller(this.botApi, this.onUpdates, {
+        "pollingInterval": opts["pollingInterval"],
+        "skippingUpdates": opts["skippingUpdates"]
+      });
       this.bots = {};
       this.botName = "";
     }
 
-    async loop(startCallback = null, stopCallback = null) {
-      if (startCallback instanceof Function) {
-        await startCallback();
-      }
-      this.botApi.getMe().then((res) => {
-        this.botName = res["username"];
-        this.botID = res["id"];
-        botUtils.log(`${this.botName}#${this.botID}: I am listening ...`);
-        return this.poller.startPollUpdates();
-      });
+    async loop(startCallback, stopCallback) {
+      var res;
       if (process.platform === "win32") {
         require("readline").createInterface({
           "input": process.stdin,
@@ -37,7 +32,7 @@
           return process.emit("SIGINT");
         });
       }
-      return process.on("SIGINT", async() => {
+      process.on("SIGINT", async() => {
         var identifier;
         this.poller.stopPollUpdates();
         for (identifier in this.bots) {
@@ -53,6 +48,14 @@
         }
         return process.exit();
       });
+      if (startCallback instanceof Function) {
+        await startCallback();
+      }
+      res = (await this.botApi.getMe());
+      this.botName = res["username"];
+      this.botID = res["id"];
+      botUtils.log(`${this.botName}#${this.botID}: I am listening…`);
+      return this.poller.startPollUpdates();
     }
 
     onUpdates(updates) {
@@ -63,22 +66,25 @@
           var identifier;
           identifier = this.identify(update);
           if (this.bots[identifier] == null) {
-            this.bots[identifier] = new this.BotServant(this.botApi, identifier, this.botName, this.botID);
-            if (this.bots[identifier].onCreate instanceof Function) {
-              await this.bots[identifier].onCreate();
+            this.bots[identifier] = {
+              "lastActiveTime": 0,
+              "instance": new this.BotServant(this.botApi, identifier, this.botName, this.botID)
+            };
+            if (this.bots[identifier]["instance"].onCreate instanceof Function) {
+              await this.bots[identifier]["instance"].onCreate();
             }
           }
-          this.bots[identifier].processUpdate(update);
-          return this.bots[identifier].lastActiveTime = Date.now();
+          this.bots[identifier]["instance"].processUpdate(update);
+          return this.bots[identifier]["lastActiveTime"] = Date.now();
         })(update);
       }
       if (this.destroyTimeout != null) {
         results = [];
         for (identifier in this.bots) {
           results.push((async(identifier) => {
-            if (Date.now() - this.bots[identifier].lastActiveTime > this.destroyTimeout) {
-              if (this.bots[identifier].onRemove instanceof Function) {
-                await this.bots[identifier].onRemove();
+            if (Date.now() - this.bots[identifier]["lastActiveTime"] > this.destroyTimeout) {
+              if (this.bots[identifier]["instance"].onRemove instanceof Function) {
+                await this.bots[identifier]["instance"].onRemove();
               }
               return delete this.bots[identifier];
             }
