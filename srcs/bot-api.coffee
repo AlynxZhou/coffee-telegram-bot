@@ -97,7 +97,7 @@ class BotApi
 
   sendPhoto: (chatID, photo, postParam = {}) =>
     postParam["chat_id"] = chatID
-    if photo instanceof String
+    if typeof photo is "string"
       postParam["photo"] = photo
       photo = null
     else if photo instanceof Object and photo["filePath"]? and photo["fileBuf"]?
@@ -109,7 +109,7 @@ class BotApi
 
   sendAudio: (chatID, audio, postParam = {}) =>
     postParam["chat_id"] = chatID
-    if audio instanceof String
+    if typeof audio is "string"
       postParam["audio"] = audio
       audio = null
     else if audio instanceof Object and \
@@ -122,7 +122,7 @@ class BotApi
 
   sendDocument: (chatID, document, postParam = {}) =>
     postParam["chat_id"] = chatID
-    if document instanceof String
+    if typeof document is "string"
       postParam["document"] = document
       document = null
     else if document instanceof Object and \
@@ -134,7 +134,7 @@ class BotApi
 
   sendVideo: (chatID, video, postParam = {}) =>
     postParam["chat_id"] = chatID
-    if video instanceof String
+    if typeof video is "string"
       postParam["video"] = video
       video = null
     else if video instanceof Object and \
@@ -146,7 +146,7 @@ class BotApi
 
   sendVideoNote: (chatID, videoNote, postParam = {}) =>
     postParam["chat_id"] = chatID
-    if videoNote instanceof String
+    if typeof videoNote is "string"
       postParam["video_note"] = videoNote
       videoNote = null
     else if videoNote instanceof Object and \
@@ -155,6 +155,30 @@ class BotApi
     else
       throw new Error("Invalid videoNote.")
     return @request("sendVideo", postParam, videoNote)
+
+  sendAnimation: (chatID, animation, postParam = {}) =>
+    postParam["chat_id"] = chatID
+    if typeof animation is "string"
+      postParam["animation"] = animation
+      animation = null
+    else if animation instanceof Object and \
+    animation["filePath"]? and animation["fileBuf"]?
+      animation["name"] = "animation"
+    else
+      throw new Error("Invalid animation.")
+    return @request("sendAnimation", postParam, animation)
+
+  sendVoice: (chatID, voice, postParam = {}) =>
+    postParam["chat_id"] = chatID
+    if typeof voice is "string"
+      postParam["voice"] = voice
+      voice = null
+    else if voice instanceof Object and \
+    voice["filePath"]? and voice["fileBuf"]?
+      voice["name"] = "voice"
+    else
+      throw new Error("Invalid voice.")
+    return @request("sendVoice", postParam, voice)
 
   sendLocation: (chatID, latitude, longitude, postParam = {}) =>
     postParam["chat_id"] = chatID
@@ -255,7 +279,7 @@ class BotApi
 
   sendSticker: (chatID, sticker, postParam = {}) =>
     postParam["chat_id"] = chatID
-    if sticker instanceof String
+    if typeof sticker is "string"
       postParam["sticker"] = sticker
       sticker = null
     else if sticker instanceof Object and \
@@ -279,7 +303,7 @@ class BotApi
 
   createNewStickerSet: (userID, name, title, \
   pngSticker, emojis, postParam = {}) =>
-    if pngSticker instanceof String
+    if typeof pngSticker is "string"
       postParam["png_sticker"] = pngSticker
       pngSticker = null
     else if pngSticker instanceof Object and \
@@ -291,7 +315,7 @@ class BotApi
 
   addStickerToSet: (userID, name, pngSticker, \
   emojis, postParam = {}) =>
-    if pngSticker instanceof String
+    if typeof pngSticker is "string"
       postParam["png_sticker"] = pngSticker
       pngSticker = null
     else if pngSticker instanceof Object and \
@@ -311,11 +335,21 @@ class BotApi
   ###
   param: Object: https://core.telegram.org/bots/api#getupdates
   return: Promise() -> Update Object: https://core.telegram.org/bots/api#update
-  WARNING: You shouldn't not call this manually, instead you'd better use
-  BotManager with your own BotTemplate, Manager will poll updates
-  automatically and call your Template to process updates.
   ###
-  getUpdates: (postParam) =>
+  getUpdates: (postParam = {}) =>
     return @request("getUpdates", postParam)
+
+  setWebhook: (url, postParam = {}) =>
+    if typeof url is "string"
+      postParam["url"] = url
+    else
+      throw new Error("Invalid url.")
+    return @request("setWebhook", postParam)
+
+  deleteWebhook: () =>
+    return @request("deleteWebhook")
+
+  getWebhookInfo: () =>
+    return @request("getWebhookInfo")
 
 module.exports = BotApi

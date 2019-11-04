@@ -4,7 +4,7 @@ coffee-telegram-bot
 A Telegram Bot framework, written in CoffeeScript.
 --------------------------------------------------
 
-Demo: [@AlynxRunaBot](https://t.me/AlynxRunaBot)
+**Deprecated, use [aztgbot](https://github.com/AlynxZhou/aztgbot/) instead.**
 
 # Feature
 

@@ -26,5 +26,8 @@
   "homepage": "https://github.com/AlynxZhou/coffee-telegram-bot#readme",
   "devDependencies": {
     "coffeescript": "^2.2.4"
+  },
+  "dependencies": {
+    "colors": "^1.4.0"
   }
 }
